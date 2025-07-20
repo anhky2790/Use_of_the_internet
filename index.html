@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Bài thi Listening8- Use of the Internet</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    .speaker-block { border: 1px solid #ccc; padding: 15px; margin-bottom: 20px; border-radius: 8px; }
+    h3 { margin-top: 0; }
+    select { width: 100%; padding: 8px; font-size: 1em; margin-top: 5px; }
+    button { padding: 10px 15px; font-size: 16px; margin-top: 20px; }
+    .result { margin-top: 30px; padding: 15px; border: 2px dashed green; border-radius: 8px; background-color: #f9f9f9; }
+    .correct { color: green; }
+    .incorrect { color: red; }
+    .question-label { margin-top: 10px; font-weight: bold; }
+  </style>
+</head>
+<body>
+
+  <h1>Bài thi Listening7- Use of the Internet </h1>
+  <p><strong>Hướng dẫn:</strong> Nghe từng đoạn âm thanh và chọn câu mô tả chính xác nội dung người nói. Mỗi đoạn chỉ nghe tối đa 2 lần.</p>
+
+  <script>
+    const answerChoices = [
+      "	Watch films",
+      "Communicate with friends",
+      "Complete assignments",
+      "Find transport information",
+      "To learn foreign languages "
+    ];
+    const correctAnswers = ["A", "B", "C", "D"];
+    const correctTexts = [answerChoices[0], answerChoices[1], answerChoices[2], answerChoices[3]];
+    const transcripts = [
+      "Speaker 1: I am a big fan of newly released movies, but the cost of going to the cinema is too high. I'm just a student, so I can't afford to go to the cinema regularly to indulge in my hobby. Therefore, I think the internet is great because it allows me to watch movies for free at home. I save both the time of going to the cinema and a considerable amount of money.",
+      "Speaker 2: In today's digital age, the internet helps us access social media to stay constantly connected with friends. Especially since I have relatives mainly living abroad or in distant cities, the internet has been a great help for my family to stay in touch. We often video call each other to share daily stories.",
+      "Speaker 3: The internet is a great resource for research, finding materials, and useful information for studying. My friends and I often go to each other's houses to do homework together. Instead of spending hours trying to figure out how to do our homework, we quickly go online and find the answers.",
+      "Speaker 4: I see that people often use the internet to watch movies, read newspapers, quickly update the news, and so on. But I usually use the internet to find directions and public transport to my friends' and relatives' houses. I'm a forgetful person, and I often forget the way, even if I've been there a hundred times. So the internet helps me a lot in not getting lost and easily find nearby public transport."
+    ];
+  </script>
+
+  <div class="speaker-block">
+    <h3>Người nói 1</h3>
+    <audio id="audio1" controls onplay="limitPlays(1)">
+      <source src="mp3_converted/speaker1.mp3" type="audio/mpeg">
+      Trình duyệt không hỗ trợ phát âm thanh.
+    </audio>
+    <div class="question-label">Chọn một đáp án:</div>
+    <select id="answer1">
+      <option value="">-- Chọn một đáp án --</option>
+    </select>
+  </div>
+
+  <div class="speaker-block">
+    <h3>Người nói 2</h3>
+    <audio id="audio2" controls onplay="limitPlays(2)">
+      <source src="mp3_converted/speaker2.mp3" type="audio/mpeg">
+      Trình duyệt không hỗ trợ phát âm thanh.
+    </audio>
+    <div class="question-label">Chọn một đáp án:</div>
+    <select id="answer2">
+      <option value="">-- Chọn một đáp án --</option>
+    </select>
+  </div>
+
+  <div class="speaker-block">
+    <h3>Người nói 3</h3>
+    <audio id="audio3" controls onplay="limitPlays(3)">
+      <source src="mp3_converted/speaker3.mp3" type="audio/mpeg">
+      Trình duyệt không hỗ trợ phát âm thanh.
+    </audio>
+    <div class="question-label">Chọn một đáp án:</div>
+    <select id="answer3">
+      <option value="">-- Chọn một đáp án --</option>
+    </select>
+  </div>
+
+  <div class="speaker-block">
+    <h3>Người nói 4</h3>
+    <audio id="audio4" controls onplay="limitPlays(4)">
+      <source src="mp3_converted/speaker4.mp3" type="audio/mpeg">
+      Trình duyệt không hỗ trợ phát âm thanh.
+    </audio>
+    <div class="question-label">Chọn một đáp án:</div>
+    <select id="answer4">
+      <option value="">-- Chọn một đáp án --</option>
+    </select>
+  </div>
+
+  <button onclick="submitQuiz()">Nộp bài</button>
+
+  <div id="result" class="result" style="display:none;"></div>
+
+  <script>
+    function shuffleArray(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+    }
+
+    const selects = document.querySelectorAll("select");
+    selects.forEach(select => {
+      const shuffled = [...answerChoices];
+      shuffleArray(shuffled);
+      shuffled.forEach(choice => {
+        const option = document.createElement("option");
+        option.value = choice;
+        option.textContent = choice;
+        select.add(option);
+      });
+    });
+
+    const playCounts = [0, 0, 0, 0];
+    function limitPlays(index) {
+      const audio = document.getElementById(`audio${index}`);
+      if (playCounts[index - 1] >= 2) {
+        audio.pause();
+        audio.currentTime = 0;
+        alert("Bạn chỉ được nghe tối đa 2 lần.");
+      } else {
+        playCounts[index - 1]++;
+      }
+    }
+
+    function submitQuiz() {
+      let correct = 0;
+      let output = "<h2>Kết quả</h2>";
+      selects.forEach((select, i) => {
+        const userAnswer = select.value;
+        const correctText = correctTexts[i];
+        const status = userAnswer === correctText ? "✅ <span class='correct'>Đúng</span>" : "❌ <span class='incorrect'>Sai</span>";
+        if (userAnswer === correctText) correct++;
+        output += `<p><strong>Người nói ${i+1}:</strong> ${status}<br>
+        Câu bạn chọn: ${userAnswer}<br>
+        Đáp án đúng: ${correctText}<br>
+        <em>Transcript: ${transcripts[i]}</em></p>`;
+        select.disabled = true;
+      });
+      output += `<hr><strong>Bạn trả lời đúng ${correct}/4 câu.</strong>`;
+      const resultDiv = document.getElementById("result");
+      resultDiv.innerHTML = output;
+      resultDiv.style.display = "block";
+      resultDiv.scrollIntoView({ behavior: "smooth" });
+    }
+  </script>
+
+</body>
+</html>
